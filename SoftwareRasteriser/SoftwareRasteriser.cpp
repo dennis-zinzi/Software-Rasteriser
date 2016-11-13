@@ -114,18 +114,125 @@ void	SoftwareRasteriser::SwapBuffers() {
 	currentDrawBuffer = !currentDrawBuffer;
 }
 
-void	SoftwareRasteriser::DrawObject(RenderObject*o) {
+void SoftwareRasteriser::DrawObject(RenderObject *o) {
+	switch(o->GetMesh()->GetType()){
+		case PRIMITIVE_POINTS:
+			RasterisePointsMesh(o);
+			break;
+		case PRIMITIVE_LINES:
+			RasteriseLinesMesh(o);
+			break;
+		case PRIMITIVE_TRIANGLES:
+			RasteriseTriMesh(o);
+			break;
+	}
+}
+
+void SoftwareRasteriser::RasterisePointsMesh(RenderObject *o) {
+	Matrix4 mvp = viewProjMatrix * o->GetModelMatrix();
+
+	for(uint i = 0; i < o->GetMesh()->numVertices; ++i){
+		Vector4 vertexPos = mvp * o->GetMesh()->vertices[i];
+		vertexPos.SelfDivisionByW();
+
+		Vector4 screenPos = portMatrix * vertexPos;
+		ShadePixel((uint)screenPos.x, (uint)screenPos.y, Colour::White);
+	}
+}
+
+void SoftwareRasteriser::RasteriseLinesMesh(RenderObject*o) {
+	Matrix4 mvp = viewProjMatrix * o->GetModelMatrix();
+	Mesh *m = o->GetMesh();
+
+	for(uint i = 0; i < m->numVertices; i += 2){
+		Vector4 v0 = mvp * m->vertices[i],
+			v1 = mvp * m->vertices[i + 1];
+
+		v0.SelfDivisionByW();
+		v1.SelfDivisionByW();
+
+		RasteriseLine(v0, v1);
+	}
+}
+
+void SoftwareRasteriser::RasteriseTriMesh(RenderObject *o) {
 
 }
 
-void	SoftwareRasteriser::RasterisePointsMesh(RenderObject*o) {
 
-}
+/* --------------------------------------------------
+ *
+ * Actual Rasterisation Functions 
+ *
+ -------------------------------------------------- */
 
-void	SoftwareRasteriser::RasteriseLinesMesh(RenderObject*o) {
+void SoftwareRasteriser::RasteriseLine(const Vector4 &vertA, const Vector4 &vertB,
+	const Colour &colA, const Colour &colB,
+	const Vector2 &texA, const Vector2 &texB){
 
-}
+	//Transform the NDC coordinates to screen coordinates
+	Vector4 v0 = portMatrix * vertA,
+		v1 = portMatrix * vertB;
+	
+	//Determine direction line is going
+	Vector4 dir = v1 - v0;
 
-void	SoftwareRasteriser::RasteriseTriMesh(RenderObject*o) {
+	int xDir = (dir.x < 0.0f) ? -1 : 1, //Move Left or Right?
+		yDir = (dir.y < 0.0f) ? -1 : 1, //Move Up or Down?
+		x = (int)v0.x, //Current x-axis plot point
+		y = (int)v0.y; //Current y-axis plot point
 
+	int *target = NULL;
+	int *scan = NULL;
+
+	int scanVal = 0,
+		targetVal = 0;
+
+	float slope = 0.0f;
+
+	//Bind our loop by this value
+	int range = 0;
+
+	//If we're steep, we have to scan over y
+	if(abs(dir.y) > abs(dir.x)){
+		slope = dir.x / dir.y;
+		range = (int)abs(dir.y);
+
+		//Error on x
+		target = &x;
+		//Iterate over y
+		scan = &y;
+
+		scanVal = yDir;
+		targetVal = xDir;
+	}
+	//If not steep, scan over x
+	else{
+		slope = dir.y / dir.x;
+		range = (int)abs(dir.x);
+
+		target = &y; //Error on y
+		scan = &x; //Iterate over x
+
+		scanVal = xDir;
+		targetVal = yDir;
+	}
+
+	float absSlope = abs(slope),
+		error = 0.0f;
+
+	for(int i = 0; i < range; ++i){
+		ShadePixel(x, y, Colour::White);
+
+		error += absSlope;
+
+		if(error > 0.5f){
+			error -= 1.0f;
+			//Either advance along x or y
+			*target += targetVal;
+		}
+
+		//Either iterate over x or y
+		*scan += scanVal;
+	}
 }

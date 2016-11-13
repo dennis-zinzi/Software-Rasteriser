@@ -63,9 +63,9 @@ protected:
 
 	virtual void Resize();
 
-	void	RasteriseLine(const Vector4 &v0, const Vector4 &v1, 
-		const Colour &colA = Colour(255,255,255,255), const Colour &colB = Colour(255,255,255,255), 
-		const Vector2 &texA = Vector2(0,0) , const Vector2 &texB = Vector2(1,1));
+	void	RasteriseLine(const Vector4 &vertA, const Vector4 &vertB, 
+		const Colour &colA = Colour(), const Colour &colB = Colour(), 
+		const Vector2 &texA = Vector2() , const Vector2 &texB = Vector2());
 
 
 

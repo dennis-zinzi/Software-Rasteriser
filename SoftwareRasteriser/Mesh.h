@@ -38,8 +38,8 @@ public:
 	Mesh(void);
 	~Mesh(void);
 
-	static Mesh*	GenerateTriangle();
-	static Mesh*	GenerateLine(const Vector3 &from, const Vector3 &to);
+	static Mesh* GenerateTriangle();
+	static Mesh* GenerateLine(const Vector3 &from, const Vector3 &to);
 
 	PrimitiveType	GetType() { return type;}
 
