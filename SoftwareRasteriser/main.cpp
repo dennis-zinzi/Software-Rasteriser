@@ -33,7 +33,7 @@ int main() {
 		scale = Matrix4::Scale(Vector3(2.0f, 0.5f, 1.0f));
 
 	modTri->modelMatrix = translate * rotate * scale;*/
-	Mesh *testTri = Mesh::GenerateTriangle();
+	/*Mesh *testTri = Mesh::GenerateTriangle();
 
 	RenderObject *o1 = new RenderObject;
 	RenderObject *o2 = new RenderObject;
@@ -48,9 +48,31 @@ int main() {
 	o1->modelMatrix = Matrix4::Translation(Vector3(-0.5f, -0.5f, 0.0f));
 	o2->modelMatrix = Matrix4::Translation(Vector3(-0.5f, 0.5f, 0.0f));
 	o3->modelMatrix = Matrix4::Translation(Vector3(0.5f, -0.5f, 0.0f));
-	o4->modelMatrix = Matrix4::Translation(Vector3(0.5f, 0.5f, 0.0f));
+	o4->modelMatrix = Matrix4::Translation(Vector3(0.5f, 0.5f, 0.0f));*/
 
+	/* Tutorial 7 objects */
+	/*Mesh *triMesh = Mesh::GenerateTriangle();
 
+	RenderObject *o1 = new RenderObject;
+	o1->mesh = triMesh;
+	o1->modelMatrix = Matrix4::Translation(Vector3(2.0f, 0.0f, -5.0f));
+
+	RenderObject *o2 = new RenderObject;
+	o2->mesh = triMesh;
+	o2->modelMatrix = Matrix4::Translation(Vector3(2.0f, 0.0f, -25.0f));
+
+	RenderObject *o3 = new RenderObject;
+	o3->mesh = triMesh;
+	o3->modelMatrix = Matrix4::Translation(Vector3(2.0f, 0.0f, -50.0f));*/
+
+	RenderObject *cube = new RenderObject;
+	cube->mesh = Mesh::LoadMeshFile("../cube.asciimesh");
+	cube->modelMatrix = Matrix4::Translation(Vector3(0, 0, -5));
+
+	//Aspect ratio to render in (Added in Tutorial 7)
+	float aspect = 800.0f / 600.0f;
+
+	//Object's view/camera matrix (Added in Tutorial 6)
 	Matrix4 viewMatrix;
 
 	while(r.UpdateWindow() && !Keyboard::KeyDown(KEY_ESCAPE)){
@@ -103,10 +125,22 @@ int main() {
 
 		/* Tutorial 6 objects */
 		//r.DrawObject(modTri);
-		r.DrawObject(o1);
+		//r.DrawObject(o1);
+		//r.DrawObject(o2);
+		//r.DrawObject(o3);
+		//r.DrawObject(o4);
+
+		/* Tutorial 7 objects */
+		//Test different projection matrices
+		//r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 45.0f));
+		r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 60.0f));
+		//r.SetProjectionMatrix(Matrix4::Perspective(6.0f, 100.0f, aspect, 45.0f));
+		//r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 45.0f, aspect, 45.0f));
+
+		/*r.DrawObject(o1);
 		r.DrawObject(o2);
-		r.DrawObject(o3);
-		r.DrawObject(o4);
+		r.DrawObject(o3);*/
+		r.DrawObject(cube);
 
 		//NEVER ACTUALLY USED
 		//if (Mouse::ButtonDown(MOUSE_LEFT)) {
@@ -132,7 +166,12 @@ int main() {
 	/* Tutorial 6 objects */
 	//delete modTri;
 	//As o1, o2, o3, o4 use same mesh, only need to delete it once 
-	delete testTri;
+	//delete testTri;
+
+	/* Tutorial 7 objects */
+	//As o1, o2, o3 use same mesh, only need to delete it once 
+	//delete triMesh;
+	delete cube;
 
 	return 0;
 }

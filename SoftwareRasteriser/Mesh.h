@@ -40,6 +40,7 @@ public:
 
 	static Mesh* GenerateLine(const Vector3 &from, const Vector3 &to);
 	static Mesh* GenerateTriangle();
+	static Mesh* LoadMeshFile(const string &fileName);
 
 	PrimitiveType	GetType() { return type;}
 

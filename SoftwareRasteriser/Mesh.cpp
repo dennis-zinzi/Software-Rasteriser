@@ -61,3 +61,42 @@ Mesh* Mesh::GenerateTriangle(){
 
 	return m;
 }
+
+Mesh* Mesh::LoadMeshFile(const string &fileName){
+	ifstream f(fileName);
+
+	if(!f){
+		return NULL;
+	}
+
+	Mesh *m = new Mesh;
+	m->type = PRIMITIVE_TRIANGLES;
+
+	f >> m->numVertices;
+
+	int hasTex = 0,
+		hasColor = 0;
+
+	f >> hasTex;
+	f >> hasColor;
+
+	m->vertices = new Vector4[m->numVertices];
+	m->textureCoords = new Vector2[m->numVertices];
+	m->colours = new Colour[m->numVertices];
+
+	for(int i = 0; i < m->numVertices; ++i){
+		f >> m->vertices[i].x;
+		f >> m->vertices[i].y;
+		f >> m->vertices[i].z;
+	}
+
+	if(hasColor){
+		for(int i = 0; i < m->numVertices; ++i){
+			f >> m->colours[i].r;
+			f >> m->colours[i].g;
+			f >> m->colours[i].b;
+			f >> m->colours[i].a;
+		}
+	}
+	return m;
+}

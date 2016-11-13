@@ -46,13 +46,13 @@ public:
 	void	SwapBuffers();
 
 	inline void SetViewMatrix(const Matrix4 &m) {
-		viewMatrix		= m;
-		viewProjMatrix	= projectionMatrix * viewMatrix;
+		viewMatrix = m;
+		viewProjMatrix = projectionMatrix * viewMatrix;
 	}
 	
-	void	SetProjectionMatrix(const Matrix4 &m) {
-		projectionMatrix	= m;
-		viewProjMatrix		= projectionMatrix * viewMatrix;
+	inline void SetProjectionMatrix(const Matrix4 &m) {
+		projectionMatrix = m;
+		viewProjMatrix = projectionMatrix * viewMatrix;
 	}
 
 	static float ScreenAreaOfTri(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2);
