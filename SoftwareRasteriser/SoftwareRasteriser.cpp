@@ -128,6 +128,57 @@ void SoftwareRasteriser::DrawObject(RenderObject *o) {
 	}
 }
 
+
+BoundingBox SoftwareRasteriser::CalculateBoxForTri(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2){
+	BoundingBox box;
+
+	//Start with the first Vertex value
+	box.topLeft.x = v0.x;
+	//Swap to second if less
+	box.topLeft.x = min(box.topLeft.x, v1.x);
+	//Swap to third if less
+	box.topLeft.x = min(box.topLeft.x, v2.x);
+	//Screen bound
+	box.topLeft.x = max(box.topLeft.x, 0.0f);
+
+	box.topLeft.y = v0.y;
+	box.topLeft.y = min(box.topLeft.y, v1.y);
+	box.topLeft.y = min(box.topLeft.y, v2.y);
+	//Screen bound
+	box.topLeft.y = max(box.topLeft.y, 0.0f);
+
+
+	//Start with the first Vertex value
+	box.bottomRight.x = v0.x;
+	//Swap to second if less
+	box.bottomRight.x = max(box.bottomRight.x, v1.x);
+	//Swap to third if less
+	box.bottomRight.x = max(box.bottomRight.x, v2.x);
+	//Screen bound
+	box.bottomRight.x = min(box.bottomRight.x, screenWidth);
+
+	box.bottomRight.y = v0.y;
+	box.bottomRight.y = max(box.bottomRight.y, v1.y);
+	box.bottomRight.y = max(box.bottomRight.y, v2.y);
+	//Screen bound
+	box.bottomRight.y = min(box.bottomRight.y, screenHeight);
+
+	return box;
+}
+
+float SoftwareRasteriser::ScreenAreaOfTri(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2){
+	float area = ((v0.x * v1.y) + (v1.x * v2.y) + (v2.x * v0.y)) - //Fist diagonals
+		((v1.x * v0.y) + (v2.x * v1.y) + (v0.x * v2.y)); //Second diagonals
+
+	return area * 0.5f;
+}
+
+
+/* --------------------------------------------------
+*
+* Rasterisation Preperation Functions
+*
+-------------------------------------------------- */
 void SoftwareRasteriser::RasterisePointsMesh(RenderObject *o) {
 	Matrix4 mvp = viewProjMatrix * o->GetModelMatrix();
 
@@ -156,7 +207,20 @@ void SoftwareRasteriser::RasteriseLinesMesh(RenderObject*o) {
 }
 
 void SoftwareRasteriser::RasteriseTriMesh(RenderObject *o) {
+	Matrix4 mvp = viewProjMatrix * o->GetModelMatrix();
+	Mesh *m = o->GetMesh();
 
+	for(uint i = 0; i < m->numVertices; i += 3){
+		Vector4 v0 = mvp * m->vertices[i],
+			v1 = mvp * m->vertices[i + 1],
+			v2 = mvp * m->vertices[i + 2];
+
+		v0.SelfDivisionByW();
+		v1.SelfDivisionByW();
+		v2.SelfDivisionByW();
+
+		RasteriseTri(v0, v1, v2);
+	}
 }
 
 
@@ -235,4 +299,47 @@ void SoftwareRasteriser::RasteriseLine(const Vector4 &vertA, const Vector4 &vert
 		//Either iterate over x or y
 		*scan += scanVal;
 	}
+}
+
+
+void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2,
+	const Colour &c0, const Colour &c1, const Colour &c2,
+	const Vector3 &t0, const Vector3 &t1, const Vector3 &t2){
+
+	//Transform vectors to be in viewport space
+	Vector4 vA = portMatrix * v0,
+		vB = portMatrix * v1,
+		vC = portMatrix * v2;
+
+	BoundingBox b = CalculateBoxForTri(vA, vB, vC);
+
+	float triArea = ScreenAreaOfTri(vA, vB, vC);
+
+	float subTriArea[3];
+	Vector4 screenPos(0.0f, 0.0f, 0.0f, 1.0f);
+
+	for(float y = b.topLeft.y; y < b.bottomRight.y; ++y){
+		for(float x = b.topLeft.x; x < b.bottomRight.x; ++x){
+			screenPos.x = x;
+			screenPos.y = y;
+
+			subTriArea[0] = abs(ScreenAreaOfTri(vA, screenPos, vB));
+			subTriArea[1] = abs(ScreenAreaOfTri(vB, screenPos, vC));
+			subTriArea[2] = abs(ScreenAreaOfTri(vC, screenPos, vA));
+
+			float triSum = subTriArea[0] + subTriArea[1] + subTriArea[2];
+
+			if(triSum > (triArea + 1.0f)){
+				//Current pixel is not in the triangle, so ignore it
+				continue;
+			}
+			if(triSum < 1.0f){
+				//Tiny triangle, ignore it
+				continue;
+			}
+
+			ShadePixel((int)x, (int)y, Colour::White);
+		}
+	}
+
 }

@@ -34,3 +34,17 @@ Mesh* Mesh::GenerateLine(const Vector3 &from, const Vector3 &to){
 
 	return m;
 }
+
+Mesh* Mesh::GenerateTriangle(){
+	Mesh *m = new Mesh;
+	m->type = PRIMITIVE_TRIANGLES;
+	m->numVertices = 3;
+
+	m->vertices = new Vector4[m->numVertices];
+	//Currently uses default sizes for Triangles, might change later to accept params insted
+	m->vertices[0] = Vector4(0.5f, -0.5f, 0.0f, 1.0f);
+	m->vertices[1] = Vector4(0.0f, 0.5f, 0.0f, 1.0f);
+	m->vertices[2] = Vector4(-0.5f, -0.5f, 0.0f, 1.0f);
+
+	return m;
+}

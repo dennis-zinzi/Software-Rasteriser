@@ -55,6 +55,8 @@ public:
 		viewProjMatrix		= projectionMatrix * viewMatrix;
 	}
 
+	static float ScreenAreaOfTri(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2);
+
 protected:
 	Colour*	GetCurrentBuffer();
 
@@ -89,7 +91,11 @@ protected:
 		const Colour &c0 = Colour(), const Colour &c1 = Colour(), const Colour &c2= Colour(),
 		const Vector3 &t0 = Vector3(), const Vector3 &t1= Vector3(), const Vector3 &t2	= Vector3());
 	
-	int		currentDrawBuffer;
+
+	BoundingBox CalculateBoxForTri(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2);
+
+	/* Member variables */
+	int	 currentDrawBuffer;
 
 	Colour*	buffers[2];
 

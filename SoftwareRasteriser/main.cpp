@@ -8,14 +8,27 @@ int main() {
 	SoftwareRasteriser r(800,600);
 
 	//Create objects to draw here
-	RenderObject *obj = new RenderObject;
-	obj->mesh = Mesh::GenerateLine(Vector3(0, 0.0f, 0), Vector3(0.5f, 0.5f, 0));
+	
+	/* Tutorial 3 obj */
+	//RenderObject *obj = new RenderObject;
+	//obj->mesh = Mesh::GenerateLine(Vector3(0, 0.0f, 0), Vector3(0.5f, 0.5f, 0));
+
+	/* Tutorial 4 objects */
+	RenderObject *tri = new RenderObject;
+	tri->mesh = Mesh::GenerateTriangle();
 
 	while(r.UpdateWindow() && !Keyboard::KeyDown(KEY_ESCAPE)){
 		r.ClearBuffers();
 
 		//Put draw functions here!
-		r.DrawObject(obj);
+		
+		/* Tutorial 3 obj */
+		//r.DrawObject(obj);
+
+		/* Tutorial 4 objects */
+		r.DrawObject(tri);
+
+
 
 		//NEVER ACTUALLY USED
 		//if (Mouse::ButtonDown(MOUSE_LEFT)) {
@@ -27,7 +40,12 @@ int main() {
 	}
 
 	//Delete RenderObjects to avoid memory leaks
-	delete obj;
+	
+	/* Tutorial 3 obj */
+	//delete obj;
+
+	/* Tutorial 4 objects */
+	delete tri;
 
 	return 0;
 }
