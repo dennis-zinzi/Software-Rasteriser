@@ -10,5 +10,6 @@ RenderObject::RenderObject(void)	{
 RenderObject::~RenderObject(void)	{
 	if(mesh){
 		delete mesh;
+		mesh = NULL;
 	}
 }

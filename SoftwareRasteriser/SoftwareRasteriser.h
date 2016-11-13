@@ -45,7 +45,7 @@ public:
 	void	ClearBuffers();
 	void	SwapBuffers();
 
-	void	SetViewMatrix(const Matrix4 &m) {
+	inline void SetViewMatrix(const Matrix4 &m) {
 		viewMatrix		= m;
 		viewProjMatrix	= projectionMatrix * viewMatrix;
 	}

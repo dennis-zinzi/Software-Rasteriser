@@ -229,3 +229,51 @@ Matrix4 Matrix4::Inverse()	{
 
 	return mat;
 }
+
+Matrix4 Matrix4::RotateX(const float degrees){
+	Matrix4 m;
+
+	float c = cos((float)DegToRad(degrees)),
+		s = sin((float)DegToRad(degrees));
+
+	m.values[0] = 1;
+	m.values[5] = c;
+	m.values[6] = -s;
+	m.values[9] = s;
+	m.values[10] = c;
+	m.values[15] = 1;
+
+	return m;
+}
+
+Matrix4 Matrix4::RotateY(const float degrees){
+	Matrix4 m;
+
+	float c = cos((float)DegToRad(degrees)),
+		s = sin((float)DegToRad(degrees));
+
+	m.values[0] = c;
+	m.values[2] = s;
+	m.values[5] = 1;
+	m.values[8] = -s;
+	m.values[10] = c;
+	m.values[15] = 1;
+
+	return m;
+}
+
+Matrix4 Matrix4::RotateZ(const float degrees){
+	Matrix4 m;
+
+	float c = cos((float)DegToRad(degrees)),
+		s = sin((float)DegToRad(degrees));
+
+	m.values[0] = c;
+	m.values[1] = -s;
+	m.values[4] = s;
+	m.values[5] = c;
+	m.values[10] = 1;
+	m.values[15] = 1;
+
+	return m;
+}

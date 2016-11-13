@@ -71,6 +71,14 @@ public:
 	//'up' as the...up axis (pointing towards the top of the screen)
 	static Matrix4 BuildViewMatrix(const Vector3 &from, const Vector3 &lookingAt, const Vector3 up = Vector3(0,1,0));
 
+	//Creates a rotation matrix that rotates by 'degrees' around the x-axis
+	static Matrix4 RotateX(const float degrees);
+
+	//Creates a rotation matrix that rotates by 'degrees' around the y-axis
+	static Matrix4 RotateY(const float degrees);
+
+	//Creates a rotation matrix that rotates by 'degrees' around the z-axis
+	static Matrix4 RotateZ(const float degrees);
 
 	Matrix4 Inverse();
 
