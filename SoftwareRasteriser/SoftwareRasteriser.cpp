@@ -35,6 +35,7 @@ get exceptions if you resized to a bigger screen area. Sorry about that.
 
 SoftwareRasteriser::SoftwareRasteriser(uint width, uint height)	: Window(width, height){
 	currentDrawBuffer	= 0;
+	currentTex = NULL;
 
 #ifndef USE_OS_BUFFERS
 	//Hi! In the tutorials, it's mentioned that we need to form our front + back buffer like so:
@@ -115,6 +116,8 @@ void	SoftwareRasteriser::SwapBuffers() {
 }
 
 void SoftwareRasteriser::DrawObject(RenderObject *o) {
+	currentTex = o->texture;
+
 	switch(o->GetMesh()->GetType()){
 		case PRIMITIVE_POINTS:
 			RasterisePointsMesh(o);
@@ -219,13 +222,18 @@ void SoftwareRasteriser::RasteriseTriMesh(RenderObject *o) {
 			v1 = mvp * m->vertices[i + 1],
 			v2 = mvp * m->vertices[i + 2];
 
+		Vector3 t0 = Vector3(m->textureCoords[i].x, m->textureCoords[i].y, 1.0f) / v0.w,
+			t1 = Vector3(m->textureCoords[i+1].x, m->textureCoords[i+1].y, 1.0f) / v1.w,
+			t2 = Vector3(m->textureCoords[i+2].x, m->textureCoords[i+2].y, 1.0f) / v2.w;
+
 		v0.SelfDivisionByW();
 		v1.SelfDivisionByW();
 		v2.SelfDivisionByW();
 
 		RasteriseTri(v0, v1, v2,
 			//Add vertex colors
-			m->colours[i], m->colours[1], m->colours[2]);
+			m->colours[i], m->colours[1], m->colours[2],
+			t0, t1, t2);
 	}
 }
 
@@ -374,9 +382,20 @@ void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, cons
 			}
 			//End of depth buffer integrations
 
-			Colour subColor = ((c0 * alpha) + (c1 * beta) + (c2 * gamma));
+			if(currentTex){
+				Vector3 subTex = (t0 * alpha) + (t1 * beta) + (t2 * gamma);
 
-			ShadePixel((uint)x, (uint)y, subColor);
+				//Convert coordinates back into world-linear space
+				/*subTex.x /= subTex.z;
+				subTex.y /= subTex.z;*/
+
+				ShadePixel((uint)x, (uint)y, currentTex->NearestTexSample(subTex));
+			}
+			else{
+				Colour subColor = ((c0 * alpha) + (c1 * beta) + (c2 * gamma));
+
+				ShadePixel((uint)x, (uint)y, subColor);
+			}
 		}
 	}
 

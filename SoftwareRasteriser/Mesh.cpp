@@ -59,6 +59,11 @@ Mesh* Mesh::GenerateTriangle(){
 	m->colours[1] = Colour(0, 255, 0, 0);
 	m->colours[2] = Colour(0, 0, 255, 0);
 
+	m->textureCoords = new Vector2[m->numVertices];
+	m->textureCoords[0] = Vector2(0.0f, 0.0f);
+	m->textureCoords[1] = Vector2(0.5f, 1.0f);
+	m->textureCoords[2] = Vector2(1.0f, 0.0f);
+
 	return m;
 }
 
@@ -96,6 +101,12 @@ Mesh* Mesh::LoadMeshFile(const string &fileName){
 			f >> m->colours[i].g;
 			f >> m->colours[i].b;
 			f >> m->colours[i].a;
+		}
+	}
+	if(hasTex){
+		for(uint i = 0; i < m->numVertices; ++i){
+			f >> m->textureCoords[i].x;
+			f >> m->textureCoords[i].y;
 		}
 	}
 	return m;

@@ -40,3 +40,10 @@ Texture* Texture::TextureFromTGA(const string &filename) {
 
 	return t;
 }
+
+const Colour& Texture::NearestTexSample(const Vector3 &coords, int miplevel){
+	int x = (int)(coords.x * (width - 1)),
+		y = (int)(coords.y * (height - 1));
+
+	return ColourAtPoint(x, y);
+}

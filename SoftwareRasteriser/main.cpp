@@ -70,7 +70,7 @@ int main() {
 	cube->modelMatrix = Matrix4::Translation(Vector3(0, 0, -5));*/
 
 	/* Tutorial 8 objects */
-	Mesh *triMesh = Mesh::GenerateTriangle();
+	/*Mesh *triMesh = Mesh::GenerateTriangle();
 
 	RenderObject *o1 = new RenderObject;
 	o1->mesh = triMesh;
@@ -78,8 +78,12 @@ int main() {
 
 	RenderObject *o2 = new RenderObject;
 	o2->mesh = triMesh;
-	o2->modelMatrix = Matrix4::Translation(Vector3(2.0f, 0.0f, -25.0f));
+	o2->modelMatrix = Matrix4::Translation(Vector3(2.0f, 0.0f, -25.0f));*/
 
+	/* Tutorial 10 objects */
+	RenderObject *oTex = new RenderObject;
+	oTex->mesh = Mesh::GenerateTriangle();
+	oTex->texture = Texture::TextureFromTGA("../brick.tga");
 
 	//Aspect ratio to render in (Added in Tutorial 7)
 	float aspect = 800.0f / 600.0f;
@@ -116,7 +120,7 @@ int main() {
 			viewMatrix = viewMatrix * Matrix4::RotateX(-1.0f);
 		}
 		if(Keyboard::KeyDown(KEY_L)){
-			viewMatrix = viewMatrix * Matrix4::RotateY(-1.0f);
+			viewMatrix = viewMatrix * Matrix4::RotateY(1.0f);
 		}
 		if(Keyboard::KeyDown(KEY_J)){
 			viewMatrix = viewMatrix * Matrix4::RotateY(-1.0f);
@@ -154,10 +158,13 @@ int main() {
 		r.DrawObject(o3);*/
 		//r.DrawObject(cube);
 
-		/* Tutorial 7 objects */
-		r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 60.0f));
+		/* Tutorial 8 objects */
+		/*r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 60.0f));
 		r.DrawObject(o1);
-		r.DrawObject(o2);
+		r.DrawObject(o2);*/
+
+		/* Tutorial 10 objects */
+		r.DrawObject(oTex);
 
 		//NEVER ACTUALLY USED
 		//if (Mouse::ButtonDown(MOUSE_LEFT)) {
@@ -191,7 +198,10 @@ int main() {
 	//delete cube;
 
 	/* Tutorial 8 objects */
-	delete triMesh;
+	//delete triMesh;
+
+	/* Tutorial 10 objects */
+	delete oTex;
 
 	return 0;
 }

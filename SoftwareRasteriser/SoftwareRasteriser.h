@@ -108,7 +108,7 @@ protected:
 	BoundingBox CalculateBoxForTri(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2);
 
 	/* Member variables */
-	int	 currentDrawBuffer;
+	int	currentDrawBuffer;
 
 	Colour*	buffers[2];
 
@@ -121,5 +121,7 @@ protected:
 	Matrix4	viewProjMatrix;
 
 	Matrix4	portMatrix;
+
+	Texture *currentTex;
 };
 
