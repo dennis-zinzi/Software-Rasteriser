@@ -199,10 +199,14 @@ void SoftwareRasteriser::RasteriseLinesMesh(RenderObject*o) {
 		Vector4 v0 = mvp * m->vertices[i],
 			v1 = mvp * m->vertices[i + 1];
 
+		//Add colors to vertices
+		Colour c0 = m->colours[i],
+			c1 = m->colours[i + 1];
+
 		v0.SelfDivisionByW();
 		v1.SelfDivisionByW();
 
-		RasteriseLine(v0, v1);
+		RasteriseLine(v0, v1, c0, c1);
 	}
 }
 
@@ -219,7 +223,9 @@ void SoftwareRasteriser::RasteriseTriMesh(RenderObject *o) {
 		v1.SelfDivisionByW();
 		v2.SelfDivisionByW();
 
-		RasteriseTri(v0, v1, v2);
+		RasteriseTri(v0, v1, v2,
+			//Add vertex colors
+			m->colours[i], m->colours[1], m->colours[2]);
 	}
 }
 
@@ -285,8 +291,15 @@ void SoftwareRasteriser::RasteriseLine(const Vector4 &vertA, const Vector4 &vert
 	float absSlope = abs(slope),
 		error = 0.0f;
 
+	//Saves a divide later
+	float reciprocalRange = 1.0f / range;
+
 	for(int i = 0; i < range; ++i){
-		ShadePixel(x, y, Colour::White);
+		float t = i * reciprocalRange;
+
+		Colour currentCol = colB * t + colA * (1.0f - t);
+
+		ShadePixel(x, y, currentCol);
 
 		error += absSlope;
 
@@ -314,6 +327,7 @@ void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, cons
 	BoundingBox b = CalculateBoxForTri(vA, vB, vC);
 
 	float triArea = ScreenAreaOfTri(vA, vB, vC);
+	float reciprocalArea = 1.0f / triArea;
 
 	float subTriArea[3];
 	Vector4 screenPos(0.0f, 0.0f, 0.0f, 1.0f);
@@ -338,7 +352,16 @@ void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, cons
 				continue;
 			}
 
-			ShadePixel((int)x, (int)y, Colour::White);
+			//Change shading pixel to add appropriate interpolated color
+			//ShadePixel((uint)x, (uint)y, Colour::White);
+			
+			float alpha = subTriArea[0] * reciprocalArea,
+				beta = subTriArea[1] * reciprocalArea,
+				gamma = subTriArea[2] * reciprocalArea;
+
+			Colour subColor = ((c0 * alpha) + (c1 * beta) + (c2 * gamma));
+
+			ShadePixel((uint)x, (uint)y, subColor);
 		}
 	}
 

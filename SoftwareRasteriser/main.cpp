@@ -14,6 +14,13 @@ int main() {
 	//obj->mesh = Mesh::GenerateLine(Vector3(0, 0.0f, 0), Vector3(0.5f, 0.5f, 0));
 
 	/* Tutorial 4 objects */
+	//RenderObject *tri = new RenderObject;
+	//tri->mesh = Mesh::GenerateTriangle();
+
+	/* Tutorial 5 objects */
+	RenderObject *line = new RenderObject;
+	line->mesh = Mesh::GenerateLine(Vector3(0, 0.0f, 0), Vector3(0.5f, 0.5f, 0));
+	
 	RenderObject *tri = new RenderObject;
 	tri->mesh = Mesh::GenerateTriangle();
 
@@ -26,9 +33,11 @@ int main() {
 		//r.DrawObject(obj);
 
 		/* Tutorial 4 objects */
+		//r.DrawObject(tri);
+
+		/* Tutorial 5 objects */
+		r.DrawObject(line);
 		r.DrawObject(tri);
-
-
 
 		//NEVER ACTUALLY USED
 		//if (Mouse::ButtonDown(MOUSE_LEFT)) {
@@ -39,12 +48,16 @@ int main() {
 		r.SwapBuffers();
 	}
 
-	//Delete RenderObjects to avoid memory leaks
+	/* Delete RenderObjects to avoid memory leaks */
 	
 	/* Tutorial 3 obj */
 	//delete obj;
 
 	/* Tutorial 4 objects */
+	//delete tri;
+
+	/* Tutorial 5 objects */
+	delete line;
 	delete tri;
 
 	return 0;
