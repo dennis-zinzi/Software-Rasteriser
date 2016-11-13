@@ -65,9 +65,21 @@ int main() {
 	o3->mesh = triMesh;
 	o3->modelMatrix = Matrix4::Translation(Vector3(2.0f, 0.0f, -50.0f));*/
 
-	RenderObject *cube = new RenderObject;
+	/*RenderObject *cube = new RenderObject;
 	cube->mesh = Mesh::LoadMeshFile("../cube.asciimesh");
-	cube->modelMatrix = Matrix4::Translation(Vector3(0, 0, -5));
+	cube->modelMatrix = Matrix4::Translation(Vector3(0, 0, -5));*/
+
+	/* Tutorial 8 objects */
+	Mesh *triMesh = Mesh::GenerateTriangle();
+
+	RenderObject *o1 = new RenderObject;
+	o1->mesh = triMesh;
+	o1->modelMatrix = Matrix4::Translation(Vector3(2.0f, 0.0f, -5.0f));
+
+	RenderObject *o2 = new RenderObject;
+	o2->mesh = triMesh;
+	o2->modelMatrix = Matrix4::Translation(Vector3(2.0f, 0.0f, -25.0f));
+
 
 	//Aspect ratio to render in (Added in Tutorial 7)
 	float aspect = 800.0f / 600.0f;
@@ -133,14 +145,19 @@ int main() {
 		/* Tutorial 7 objects */
 		//Test different projection matrices
 		//r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 45.0f));
-		r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 60.0f));
+		/*r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 60.0f));*/
 		//r.SetProjectionMatrix(Matrix4::Perspective(6.0f, 100.0f, aspect, 45.0f));
 		//r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 45.0f, aspect, 45.0f));
 
 		/*r.DrawObject(o1);
 		r.DrawObject(o2);
 		r.DrawObject(o3);*/
-		r.DrawObject(cube);
+		//r.DrawObject(cube);
+
+		/* Tutorial 7 objects */
+		r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 60.0f));
+		r.DrawObject(o1);
+		r.DrawObject(o2);
 
 		//NEVER ACTUALLY USED
 		//if (Mouse::ButtonDown(MOUSE_LEFT)) {
@@ -171,7 +188,10 @@ int main() {
 	/* Tutorial 7 objects */
 	//As o1, o2, o3 use same mesh, only need to delete it once 
 	//delete triMesh;
-	delete cube;
+	//delete cube;
+
+	/* Tutorial 8 objects */
+	delete triMesh;
 
 	return 0;
 }

@@ -49,9 +49,9 @@ SoftwareRasteriser::SoftwareRasteriser(uint width, uint height)	: Window(width, 
 	}
 #endif
 
-	depthBuffer		=	new unsigned short[screenWidth * screenHeight];
+	depthBuffer	= new unsigned short[screenWidth * screenHeight];
 
-	float zScale	= (pow(2.0f,16) - 1) * 0.5f;
+	float zScale = (pow(2.0f,16) - 1) * 0.5f;
 
 	Vector3 halfScreen = Vector3((screenWidth - 1) * 0.5f, (screenHeight - 1) * 0.5f, zScale);
 
@@ -299,7 +299,14 @@ void SoftwareRasteriser::RasteriseLine(const Vector4 &vertA, const Vector4 &vert
 
 		Colour currentCol = colB * t + colA * (1.0f - t);
 
-		ShadePixel(x, y, currentCol);
+		//Start of depth buffer integration
+		float zVal = (v1.z * (i * reciprocalRange)) + (v0.z * (1.0f - (i * reciprocalRange)));
+
+		if(DepthFunc((int)x, (int)y, zVal)){
+			ShadePixel(x, y, currentCol);
+		}
+		//End of depth buffer integration
+
 
 		error += absSlope;
 
@@ -358,6 +365,14 @@ void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, cons
 			float alpha = subTriArea[0] * reciprocalArea,
 				beta = subTriArea[1] * reciprocalArea,
 				gamma = subTriArea[2] * reciprocalArea;
+
+			//Start of depth buffer integrations
+			float zVal = (vA.z * alpha) + (vB.z * beta) + (vC.z * gamma);
+
+			if(!DepthFunc((int)x, (int)y, zVal)){
+				continue;
+			}
+			//End of depth buffer integrations
 
 			Colour subColor = ((c0 * alpha) + (c1 * beta) + (c2 * gamma));
 

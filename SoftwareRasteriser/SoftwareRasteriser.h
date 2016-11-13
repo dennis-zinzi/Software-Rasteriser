@@ -84,6 +84,19 @@ protected:
 		buffers[currentDrawBuffer][index] = c;
 	}
 
+	inline bool DepthFunc(int x, int y, float depthValue){
+		int index = (y * screenWidth) + x;
+
+		uint castVal = (uint)depthValue;
+
+		if(castVal > depthBuffer[index]){
+			return false;
+		}
+
+		depthBuffer[index] = castVal;
+		return true;
+	}
+
 
 	void	RasteriseTriMesh(RenderObject*o);
 
