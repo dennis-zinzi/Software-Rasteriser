@@ -683,7 +683,8 @@ void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, cons
 			else{
 				Colour subColor = ((c0 * alpha) + (c1 * beta) + (c2 * gamma));
 
-				ShadePixel((uint)x, (uint)y, subColor);
+				//ShadePixel((uint)x, (uint)y, subColor);
+				BlendPixel(x, y, subColor);
 			}
 		}
 	}

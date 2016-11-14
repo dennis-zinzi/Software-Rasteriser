@@ -14,8 +14,8 @@ int main() {
 	//obj->mesh = Mesh::GenerateLine(Vector3(0, 0.0f, 0), Vector3(0.5f, 0.5f, 0));
 
 	/* Tutorial 4 objects */
-	RenderObject *tri = new RenderObject;
-	tri->mesh = Mesh::GenerateTriangle();
+	//RenderObject *tri = new RenderObject;
+	//tri->mesh = Mesh::GenerateTriangle();
 
 	/* Tutorial 5 objects */
 	//RenderObject *line = new RenderObject;
@@ -94,7 +94,7 @@ int main() {
 
 
 	/* Tutorial 9 objects */
-	Mesh *triM = Mesh::GenerateTriangle();
+	//Mesh *triM = Mesh::GenerateTriangle();
 
 	//RenderObject *o1 = new RenderObject;
 	//RenderObject *o2 = new RenderObject;
@@ -115,9 +115,18 @@ int main() {
 	//o5->mesh = triM;
 	//o5->modelMatrix = Matrix4::RotateX(45.0f) * Matrix4::Scale(Vector3(1.414f, 1.414f, 1.414f));
 
-	RenderObject *o6 = new RenderObject;
-	o6->mesh = triM;
-	o6->modelMatrix = Matrix4::RotateY(180.0f);
+	//RenderObject *o6 = new RenderObject;
+	//o6->mesh = triM;
+	//o6->modelMatrix = Matrix4::RotateY(180.0f);
+
+	/* Tutorial 12 objects */
+	RenderObject *o1 = new RenderObject;
+	o1->mesh = Mesh::GenerateTriangle();
+	o1->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -6.0f));
+
+	RenderObject *o2 = new RenderObject;
+	o2->mesh = Mesh::GenerateAlphaTriangle();
+	o2->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -5.0f));
 
 
 	//Aspect ratio to render in (Added in Tutorial 7)
@@ -226,7 +235,12 @@ int main() {
 		//r.DrawObject(o4);
 		
 		//r.DrawObject(o5);
-		r.DrawObject(o6);
+		//r.DrawObject(o6);
+
+		/* Tutorial 12 objects */
+		r.DrawObject(o2); 
+		r.DrawObject(o1);
+		
 
 		//NEVER ACTUALLY USED
 		//if (Mouse::ButtonDown(MOUSE_LEFT)) {
@@ -270,7 +284,12 @@ int main() {
 
 	/* Tutorial 9 objects */
 	//As o1, o2, o3, o4, and o5 use same mesh, only need to delete it once 
-	delete triM;
+	//delete triM;
+
+	/* Tutorial 12 objects */
+	//As o1 and o2use same mesh, only need to delete it once 
+	delete o1;
+	delete o2;
 
 	return 0;
 }

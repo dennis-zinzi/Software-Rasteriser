@@ -112,6 +112,29 @@ protected:
 		buffers[currentDrawBuffer][index] = c;
 	}
 
+	inline void BlendPixel(int x, int y, const Colour &source){
+		if(y >= screenHeight || y < 0){
+			//current pixel is off-screen
+			return;
+		}
+		if(x >= screenWidth || x < 0){
+			//current pixel is off-screen
+			return;
+		}
+
+		int index = (y * screenWidth) + x;
+
+		Colour &dest = buffers[currentDrawBuffer][index];
+
+		unsigned char sFactor = source.a,
+			dFactor = 255 - source.a;
+
+		dest.r = ((source.r * sFactor) + (dest.r * dFactor)) / 255;
+		dest.g = ((source.g * sFactor) + (dest.g * dFactor)) / 255;
+		dest.b = ((source.b * sFactor) + (dest.b * dFactor)) / 255;
+		dest.a = ((source.a * sFactor) + (dest.a * dFactor)) / 255;
+	}
+
 	inline bool DepthFunc(int x, int y, float depthValue){
 		int index = (y * screenWidth) + x;
 
