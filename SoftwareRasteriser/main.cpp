@@ -107,6 +107,12 @@ int main() {
 		if(Keyboard::KeyDown(KEY_S)){
 			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, -0.01f, 0.0f));
 		}
+		if(Keyboard::KeyDown(KEY_E)){
+			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, 0.01f));
+		}
+		if(Keyboard::KeyDown(KEY_Q)){
+			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, -0.01f));
+		}
 		if(Keyboard::KeyDown(KEY_RIGHT)){
 			viewMatrix = viewMatrix * Matrix4::RotateZ(1.0f);
 		}
@@ -149,7 +155,7 @@ int main() {
 		/* Tutorial 7 objects */
 		//Test different projection matrices
 		//r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 45.0f));
-		/*r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 60.0f));*/
+		r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 100.0f, aspect, 60.0f));
 		//r.SetProjectionMatrix(Matrix4::Perspective(6.0f, 100.0f, aspect, 45.0f));
 		//r.SetProjectionMatrix(Matrix4::Perspective(1.0f, 45.0f, aspect, 45.0f));
 
@@ -164,6 +170,7 @@ int main() {
 		r.DrawObject(o2);*/
 
 		/* Tutorial 10 objects */
+		//r.SetProjectionMatrix(viewMatrix * Matrix4::Orthographic(-1, 1, 10, -20, 10, -20));
 		r.DrawObject(oTex);
 
 		//NEVER ACTUALLY USED
