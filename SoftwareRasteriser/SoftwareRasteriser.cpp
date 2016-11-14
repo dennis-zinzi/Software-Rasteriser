@@ -36,6 +36,7 @@ get exceptions if you resized to a bigger screen area. Sorry about that.
 SoftwareRasteriser::SoftwareRasteriser(uint width, uint height)	: Window(width, height){
 	currentDrawBuffer	= 0;
 	currentTex = NULL;
+	texSampleState = SAMPLE_NEAREST;
 
 #ifndef USE_OS_BUFFERS
 	//Hi! In the tutorials, it's mentioned that we need to form our front + back buffer like so:
@@ -174,6 +175,23 @@ float SoftwareRasteriser::ScreenAreaOfTri(const Vector4 &v0, const Vector4 &v1, 
 		((v1.x * v0.y) + (v2.x * v1.y) + (v0.x * v2.y)); //Second diagonals
 
 	return area * 0.5f;
+}
+
+
+void SoftwareRasteriser::CalculateWeights(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2,
+	const Vector4 &pnt, float &aplha, float &beta, float &gamma){
+
+	float triArea = ScreenAreaOfTri(v0, v1, v2);
+	float reciprocalArea = 1.0f / triArea;
+
+	float subTriArea[3];
+	subTriArea[0] = abs(ScreenAreaOfTri(v0, pnt, v1));
+	subTriArea[1] = abs(ScreenAreaOfTri(v1, pnt, v2));
+	subTriArea[2] = abs(ScreenAreaOfTri(v2, pnt, v0));
+
+	aplha = subTriArea[1] * reciprocalArea;
+	beta = subTriArea[2] * reciprocalArea;
+	gamma = subTriArea[0] * reciprocalArea;
 }
 
 
@@ -389,7 +407,52 @@ void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, cons
 				subTex.x /= subTex.z;
 				subTex.y /= subTex.z;
 
-				ShadePixel((uint)x, (uint)y, currentTex->NearestTexSample(subTex));
+				if(texSampleState == SAMPLE_NEAREST){
+					ShadePixel((uint)x, (uint)y, currentTex->NearestTexSample(subTex));
+				}
+				else if(texSampleState == SAMPLE_BILINEAR){
+					ShadePixel((uint)x, (uint)y, currentTex->BilinearTexSample(subTex));
+				}
+				else if(texSampleState == SAMPLE_MIPMAP_NEAREST){
+					float xAlpha,
+						xBeta,
+						xGamma;
+
+					float yAlpha,
+						yBeta,
+						yGamma;
+
+					CalculateWeights(vA, vB, vC, screenPos + Vector4(1.0f, 0.0f, 0.0f, 0.0f),
+						xAlpha, xBeta, xGamma);
+
+					CalculateWeights(vA, vB, vC, screenPos + Vector4(0.0f, 1.0f, 0.0f, 0.0f),
+						yAlpha, yBeta, yGamma);
+
+					Vector3 xDerivs = (t0 * xAlpha) + (t1 * xBeta) + (t2 * xGamma),
+						yDerivs = (t0 * yAlpha) + (t1 * yBeta) + (t2 * yGamma);
+
+					//Return to a linear texture-space
+					xDerivs.x /= xDerivs.z;
+					xDerivs.y /= xDerivs.z;
+
+					yDerivs.x /= yDerivs.z;
+					yDerivs.y /= yDerivs.z;
+
+					//Get the rate of change on the x-axis
+					xDerivs -= subTex;
+					//Get the rate of change on the y-axis
+					yDerivs -= subTex;
+
+					float maxU = max(abs(xDerivs.x), abs(yDerivs.x)),
+						maxV = max(abs(xDerivs.x), abs(yDerivs.y));
+
+					float maxChange = abs(max(maxU, maxV));
+
+					int lambda = (int)abs(log(maxChange) / log(2.0f));
+
+					//Sample from the usual texture coords, with new Level Of Detail (LOD)
+					ShadePixel((uint)x, (uint)y, currentTex->NearestTexSample(subTex, lambda));
+				}
 			}
 			else{
 				Colour subColor = ((c0 * alpha) + (c1 * beta) + (c2 * gamma));

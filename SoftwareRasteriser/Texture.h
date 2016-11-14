@@ -39,9 +39,11 @@ public:
 
 	static Texture* TextureFromTGA(const string &filename);
 	
-	const Colour&	NearestTexSample(const Vector3 &coords, int miplevel = 0);
+	const Colour& NearestTexSample(const Vector3 &coords, int miplevel = 1000/*0*/);
 
-	const Colour&	ColourAtPoint(int x, int y, int mipLevel = 0) {
+	const Colour& BilinearTexSample(const Vector3 &coords, int miplevel = 1000/*0*/);
+
+	const Colour&	ColourAtPoint(int x, int y, int mipLevel = 1000) {
 		int texWidth = width >> mipLevel;
 		int texHeight = height >> mipLevel;
 
@@ -50,13 +52,19 @@ public:
 
 		int index =  (y * texHeight) + x;
 
-		return texels[index];
+		//return texels[index];
+		return mipLevels[mipLevel][index];
 	}
 
 	uint	GetWidth()	{ return width;}
 	uint	GetHeight() { return height;}
 
 protected:
+	void CreateMipmaps();
+	void GenerateMipLevel(Colour *src, Colour *dest, int mipLevel);
+
+	vector<Colour*> mipLevels;
+
 	uint width;
 	uint height;
 

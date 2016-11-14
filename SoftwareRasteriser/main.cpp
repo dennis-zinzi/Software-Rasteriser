@@ -81,16 +81,25 @@ int main() {
 	o2->modelMatrix = Matrix4::Translation(Vector3(2.0f, 0.0f, -25.0f));*/
 
 	/* Tutorial 10 objects */
-	RenderObject *oTex = new RenderObject;
+	/*RenderObject *oTex = new RenderObject;
 	oTex->mesh = Mesh::GenerateTriangle();
 	oTex->texture = Texture::TextureFromTGA("../brick.tga");
-	//oTex->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -5.0f));
+	oTex->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -5.0f));*/
+
+	/* Tutorial 11 objects */
+	RenderObject *oAdvTex = new RenderObject;
+	oAdvTex->mesh = Mesh::GenerateTriangle();
+	oAdvTex->texture = Texture::TextureFromTGA("../brick.tga");
+	oAdvTex->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -5.0f));
 
 	//Aspect ratio to render in (Added in Tutorial 7)
 	float aspect = 800.0f / 600.0f;
 
 	//Object's view/camera matrix (Added in Tutorial 6)
 	Matrix4 viewMatrix;
+
+	//Added in Tutorial 11
+	Vector3 camTranslate = Vector3(0.0f, 0.0f, -8.0f);
 
 	while(r.UpdateWindow() && !Keyboard::KeyDown(KEY_ESCAPE)){
 		r.ClearBuffers();
@@ -132,7 +141,19 @@ int main() {
 		if(Keyboard::KeyDown(KEY_J)){
 			viewMatrix = viewMatrix * Matrix4::RotateY(-1.0f);
 		}
-		r.SetViewMatrix(viewMatrix);
+		/*r.SetViewMatrix(viewMatrix);*/
+
+		//Change filtering technique (Added in Tutorial 11)
+		if(Keyboard::KeyDown(KEY_F)){
+			r.SwitchTextureFiltering();
+		}
+		if(Keyboard::KeyDown(KEY_2)){
+			camTranslate.z += 0.01f;
+		}
+		if(Keyboard::KeyDown(KEY_1)){
+			camTranslate.z -= 0.01f;
+		}
+		r.SetViewMatrix(Matrix4::Translation(camTranslate));
 
 		//Put draw functions here!
 		
@@ -172,7 +193,10 @@ int main() {
 
 		/* Tutorial 10 objects */
 		//r.SetProjectionMatrix(viewMatrix * Matrix4::Orthographic(-1, 1, 10, -20, 10, -20));
-		r.DrawObject(oTex);
+		//r.DrawObject(oTex);
+
+		/* Tutorial 11 objects */
+		r.DrawObject(oAdvTex);
 
 		//NEVER ACTUALLY USED
 		//if (Mouse::ButtonDown(MOUSE_LEFT)) {
@@ -209,7 +233,10 @@ int main() {
 	//delete triMesh;
 
 	/* Tutorial 10 objects */
-	delete oTex;
+	//delete oTex;
+
+	/* Tutorial 11 objects */
+	delete oAdvTex;
 
 	return 0;
 }

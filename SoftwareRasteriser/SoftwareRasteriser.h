@@ -32,6 +32,13 @@ struct BoundingBox {
 	Vector2 bottomRight;
 };
 
+enum SampleState{
+	SAMPLE_NEAREST,
+	SAMPLE_BILINEAR,
+	SAMPLE_MIPMAP_NEAREST,
+	SAMPLE_MIMPAP_BILINEAR
+};
+
 class RenderObject;
 class Texture;
 
@@ -56,6 +63,24 @@ public:
 	}
 
 	static float ScreenAreaOfTri(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2);
+
+	inline void SwitchTextureFiltering(){
+		if(texSampleState == SAMPLE_NEAREST){
+			texSampleState = SAMPLE_BILINEAR;
+		}
+		else if(texSampleState == SAMPLE_BILINEAR){
+			texSampleState = SAMPLE_MIPMAP_NEAREST;
+		}
+		else /*if(texSampleState == SAMPLE_MIPMAP_NEAREST)*/{
+			//texSampleState = SAMPLE_MIMPAP_BILINEAR;
+			texSampleState = SAMPLE_NEAREST;
+		}
+		/* uncomment when implemented bilinear mipmap sampling
+		else{
+			texSampleState = SAMPLE_NEAREST;
+		}
+		*/
+	}
 
 protected:
 	Colour*	GetCurrentBuffer();
@@ -107,6 +132,9 @@ protected:
 
 	BoundingBox CalculateBoxForTri(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2);
 
+	void CalculateWeights(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2,
+		const Vector4 &pnt, float &aplha, float &beta, float &gamma);
+
 	/* Member variables */
 	int	currentDrawBuffer;
 
@@ -123,5 +151,7 @@ protected:
 	Matrix4	portMatrix;
 
 	Texture *currentTex;
+
+	SampleState texSampleState;
 };
 
