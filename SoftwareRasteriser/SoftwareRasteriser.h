@@ -95,7 +95,7 @@ protected:
 
 	void	RasteriseLine(const Vector4 &vertA, const Vector4 &vertB, 
 		const Colour &colA = Colour(), const Colour &colB = Colour(), 
-		const Vector2 &texA = Vector2() , const Vector2 &texB = Vector2());
+		const Vector3 &texA = Vector3() , const Vector3 &texB = Vector3());
 
 
 
@@ -137,6 +137,18 @@ protected:
 
 	void CalculateWeights(const Vector4 &v0, const Vector4 &v1, const Vector4 &v2,
 		const Vector4 &pnt, float &aplha, float &beta, float &gamma);
+
+	bool CohenSutherlandLine(Vector4 &inA, Vector4 &inB,
+		Colour &colA, Colour &colB,
+		Vector3 &texA, Vector3 &texB);
+
+	void SutherlandHodgmanTri(Vector4 &v0, Vector4 &v1, Vector4 &v2,
+		const Colour &c0 = Colour(), const Colour &c1 = Colour(), const Colour &c2 = Colour(),
+		const Vector2 &t0 = Vector2(), const Vector2 &t1 = Vector2(), const Vector2 &t2 = Vector2());
+
+	float ClipEdge(const Vector4 &inA, const Vector4 &inB, int axis);
+
+	int HomogenousOutcode(const Vector4 &in);
 
 	/* Member variables */
 	int	currentDrawBuffer;
