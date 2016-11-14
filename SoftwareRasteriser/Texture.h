@@ -39,11 +39,11 @@ public:
 
 	static Texture* TextureFromTGA(const string &filename);
 	
-	const Colour& NearestTexSample(const Vector3 &coords, int miplevel = 1000/*0*/);
+	const Colour& NearestTexSample(const Vector3 &coords, int miplevel = 1000);
 
-	const Colour& BilinearTexSample(const Vector3 &coords, int miplevel = 1000/*0*/);
+	const Colour& BilinearTexSample(const Vector3 &coords, int miplevel = 1000);
 
-	const Colour&	ColourAtPoint(int x, int y, int mipLevel = 1000) {
+	const Colour&	ColourAtPoint(int x, int y, int mipLevel = 0) {
 		int texWidth = width >> mipLevel;
 		int texHeight = height >> mipLevel;
 

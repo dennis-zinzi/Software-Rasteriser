@@ -67,13 +67,16 @@ public:
 	inline void SwitchTextureFiltering(){
 		if(texSampleState == SAMPLE_NEAREST){
 			texSampleState = SAMPLE_BILINEAR;
+			std::cout << "NOW BILINEAR" << std::endl;
 		}
 		else if(texSampleState == SAMPLE_BILINEAR){
 			texSampleState = SAMPLE_MIPMAP_NEAREST;
+			std::cout << "NOW MIPMAP NEAREST" << std::endl;
 		}
 		else /*if(texSampleState == SAMPLE_MIPMAP_NEAREST)*/{
 			//texSampleState = SAMPLE_MIMPAP_BILINEAR;
 			texSampleState = SAMPLE_NEAREST;
+			std::cout << "NOW NEAREST" << std::endl;
 		}
 		/* uncomment when implemented bilinear mipmap sampling
 		else{

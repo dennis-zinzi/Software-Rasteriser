@@ -9,6 +9,11 @@ Texture::Texture(void)	{
 
 Texture::~Texture(void)	{
 	delete[] texels;
+
+	//Delete contents of mipLevels vector
+	for(Colour *c : mipLevels){
+		delete[] c;
+	}
 }
 
 Texture* Texture::TextureFromTGA(const string &filename) {
@@ -62,7 +67,7 @@ const Colour& Texture::BilinearTexSample(const Vector3 &coords, int miplevel){
 
 	int x = (int)(coords.x * texWidth),
 		y = (int)(coords.y * texHeight);
-
+	
 	//Current tex point
 	const Colour &tLeft = ColourAtPoint(x, y);
 	//Texel to the right
@@ -71,13 +76,13 @@ const Colour& Texture::BilinearTexSample(const Vector3 &coords, int miplevel){
 	const Colour &tBottomLeft = ColourAtPoint(x, y + 1);
 	//Texel below and to the right
 	const Colour &tBottomRight = ColourAtPoint(x + 1, y + 1);
-
+	
 	float fracX = (coords.x * texWidth) - x, //might be a divide?
 		fracY = (coords.y * texHeight) - y;
-
+	
 	Colour top = Colour::Lerp(tLeft, tRight, fracX),
 		bottom = Colour::Lerp(tBottomLeft, tBottomRight, fracX);
-
+	
 	return Colour::Lerp(top, bottom, fracY);
 }
 
@@ -101,8 +106,6 @@ void Texture::CreateMipmaps(){
 		numLevels++;
 
 		mipLevels.push_back(newLevel);
-
-		delete[] newLevel;
 	}
 }
 

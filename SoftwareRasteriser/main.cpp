@@ -141,19 +141,12 @@ int main() {
 		if(Keyboard::KeyDown(KEY_J)){
 			viewMatrix = viewMatrix * Matrix4::RotateY(-1.0f);
 		}
-		/*r.SetViewMatrix(viewMatrix);*/
+		r.SetViewMatrix(viewMatrix);
 
 		//Change filtering technique (Added in Tutorial 11)
 		if(Keyboard::KeyDown(KEY_F)){
 			r.SwitchTextureFiltering();
 		}
-		if(Keyboard::KeyDown(KEY_2)){
-			camTranslate.z += 0.01f;
-		}
-		if(Keyboard::KeyDown(KEY_1)){
-			camTranslate.z -= 0.01f;
-		}
-		r.SetViewMatrix(Matrix4::Translation(camTranslate));
 
 		//Put draw functions here!
 		

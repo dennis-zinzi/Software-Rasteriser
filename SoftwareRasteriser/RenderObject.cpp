@@ -12,4 +12,8 @@ RenderObject::~RenderObject(void)	{
 		delete mesh;
 		mesh = NULL;
 	}
+	if(texture){
+		//delete texture;
+		texture = NULL;
+	}
 }
