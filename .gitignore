@@ -13,3 +13,4 @@ SoftwareRasteriser/[Dd]ebug/
 
 *.opensdf
 *.sdf
+.vs/

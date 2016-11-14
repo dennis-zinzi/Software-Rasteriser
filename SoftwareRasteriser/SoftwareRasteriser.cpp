@@ -370,9 +370,9 @@ void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, cons
 			//Change shading pixel to add appropriate interpolated color
 			//ShadePixel((uint)x, (uint)y, Colour::White);
 			
-			float alpha = subTriArea[0] * reciprocalArea,
-				beta = subTriArea[1] * reciprocalArea,
-				gamma = subTriArea[2] * reciprocalArea;
+			float alpha = subTriArea[1] * reciprocalArea,
+				beta = subTriArea[2] * reciprocalArea,
+				gamma = subTriArea[0] * reciprocalArea;
 
 			//Start of depth buffer integrations
 			float zVal = (vA.z * alpha) + (vB.z * beta) + (vC.z * gamma);
@@ -386,8 +386,8 @@ void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, cons
 				Vector3 subTex = (t0 * alpha) + (t1 * beta) + (t2 * gamma);
 
 				//Convert coordinates back into world-linear space
-				/*subTex.x /= subTex.z;
-				subTex.y /= subTex.z;*/
+				subTex.x /= subTex.z;
+				subTex.y /= subTex.z;
 
 				ShadePixel((uint)x, (uint)y, currentTex->NearestTexSample(subTex));
 			}

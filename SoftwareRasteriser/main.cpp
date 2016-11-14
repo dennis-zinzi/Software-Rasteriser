@@ -84,6 +84,7 @@ int main() {
 	RenderObject *oTex = new RenderObject;
 	oTex->mesh = Mesh::GenerateTriangle();
 	oTex->texture = Texture::TextureFromTGA("../brick.tga");
+	//oTex->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -5.0f));
 
 	//Aspect ratio to render in (Added in Tutorial 7)
 	float aspect = 800.0f / 600.0f;
