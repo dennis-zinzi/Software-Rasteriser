@@ -3,6 +3,10 @@
 #include "Mesh.h"
 #include "Texture.h"
 
+using std::vector;
+using std::cout;
+using std::endl;
+
 int main() {
 	//Create a 800x600 widow to draw in
 	SoftwareRasteriser r(800,600);
@@ -120,13 +124,26 @@ int main() {
 	//o6->modelMatrix = Matrix4::RotateY(180.0f);
 
 	/* Tutorial 12 objects */
-	RenderObject *o1 = new RenderObject;
-	o1->mesh = Mesh::GenerateTriangle();
-	o1->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -6.0f));
+	//RenderObject *o1 = new RenderObject;
+	//o1->mesh = Mesh::GenerateTriangle();
+	//o1->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -6.0f));
 
-	RenderObject *o2 = new RenderObject;
-	o2->mesh = Mesh::GenerateAlphaTriangle();
-	o2->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -5.0f));
+	//RenderObject *o2 = new RenderObject;
+	//o2->mesh = Mesh::GenerateAlphaTriangle();
+	//o2->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -5.0f));
+	
+
+	
+	/* Scene objects */
+	RenderObject **points = new RenderObject*[100];
+	for(int i = 0; i < 100; i++){
+		points[i] = new RenderObject;
+		points[i]->mesh = Mesh::GeneratePoint(Vector3(i + 0.01f, 0.0f, -6.0f));
+		points[i]->modelMatrix = Matrix4::Translation(Vector3(i+0.01f, 0.0f, -6.0f));
+	}
+	
+
+
 
 
 	//Aspect ratio to render in (Added in Tutorial 7)
@@ -238,8 +255,15 @@ int main() {
 		//r.DrawObject(o6);
 
 		/* Tutorial 12 objects */
-		r.DrawObject(o2); 
-		r.DrawObject(o1);
+		//r.DrawObject(o2); 
+		//r.DrawObject(o1);
+
+
+
+		/* Coursework objects */
+		for(int i = 0; i < 100; i++){
+			r.DrawObject(points[i]);
+		}
 		
 
 		//NEVER ACTUALLY USED
@@ -288,8 +312,8 @@ int main() {
 
 	/* Tutorial 12 objects */
 	//As o1 and o2use same mesh, only need to delete it once 
-	delete o1;
-	delete o2;
+	//delete o1;
+	//delete o2;
 
 	return 0;
 }

@@ -21,6 +21,21 @@ Mesh::~Mesh(void)	{
  * Drawing Functions
  *
  -------------------------------------------------- */
+Mesh* Mesh::GeneratePoint(const Vector3 &pos){
+	Mesh *m = new Mesh;
+	m->numVertices = 1;
+
+	m->vertices = new Vector4[m->numVertices];
+	m->vertices[0] = Vector4(pos.x, pos.y, pos.z, 1.0f);
+
+	m->colours = new Colour[m->numVertices];
+	m->colours[0] = Colour(((unsigned char)(rand() / 255) + 1), ((unsigned char)(rand() / 255) + 1), ((unsigned char)(rand() / 255) + 1), 255);
+
+	m->type = PRIMITIVE_POINTS;
+
+	return m;
+}
+
 Mesh* Mesh::GenerateLine(const Vector3 &from, const Vector3 &to){
 	Mesh *m = new Mesh;
 
