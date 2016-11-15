@@ -29,8 +29,8 @@ Mesh* Mesh::GeneratePoint(const Vector3 &pos){
 	m->vertices[0] = Vector4(pos.x, pos.y, pos.z, 1.0f);
 
 	m->colours = new Colour[m->numVertices];
+	//Assign random color to point
 	m->colours[0] = Colour(((unsigned char)(rand() / 255) + 1), ((unsigned char)(rand() / 255) + 1), ((unsigned char)(rand() / 255) + 1), 255);
-	//m->colours[0] = Colour(0, 0, 255, 255);
 
 	m->type = PRIMITIVE_POINTS;
 
@@ -67,7 +67,6 @@ Mesh* Mesh::GenerateTriangle(Vector3 &v0, Vector3 &v1, Vector3 &v2){
 	m->numVertices = 3;
 
 	m->vertices = new Vector4[m->numVertices];
-	//Currently uses default sizes for Triangles, might change later to accept params insted
 	m->vertices[0] = Vector4(v0.x, v0.y, v0.z, 1.0f);
 	m->vertices[1] = Vector4(v1.x, v1.y, v1.z, 1.0f);
 	m->vertices[2] = Vector4(v2.x, v2.y, v2.z, 1.0f);
