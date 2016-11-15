@@ -40,7 +40,7 @@ public:
 
 	static Mesh* GeneratePoint(const Vector3 &pos);
 	static Mesh* GenerateLine(const Vector3 &from, const Vector3 &to);
-	static Mesh* GenerateTriangle();
+	static Mesh* GenerateTriangle(Vector3 &v0 = Vector3(0.5f, -0.5f, 0.0f), Vector3 &v1 = Vector3(0.0f, 0.5f, 0.5f), Vector3 &v2 = Vector3(-0.5f, -0.5f, 0.0f));
 	static Mesh* GenerateAlphaTriangle();
 	static Mesh* LoadMeshFile(const string &fileName);
 

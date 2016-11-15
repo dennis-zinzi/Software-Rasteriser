@@ -61,16 +61,16 @@ Mesh* Mesh::GenerateLine(const Vector3 &from, const Vector3 &to){
 	return m;
 }
 
-Mesh* Mesh::GenerateTriangle(){
+Mesh* Mesh::GenerateTriangle(Vector3 &v0, Vector3 &v1, Vector3 &v2){
 	Mesh *m = new Mesh;
 	m->type = PRIMITIVE_TRIANGLES;
 	m->numVertices = 3;
 
 	m->vertices = new Vector4[m->numVertices];
 	//Currently uses default sizes for Triangles, might change later to accept params insted
-	m->vertices[0] = Vector4(0.5f, -0.5f, 0.0f, 1.0f);
-	m->vertices[1] = Vector4(0.0f, 0.5f, 0.5f, 1.0f);
-	m->vertices[2] = Vector4(-0.5f, -0.5f, 0.0f, 1.0f);
+	m->vertices[0] = Vector4(v0.x, v0.y, v0.z, 1.0f);
+	m->vertices[1] = Vector4(v1.x, v1.y, v1.z, 1.0f);
+	m->vertices[2] = Vector4(v2.x, v2.y, v2.z, 1.0f);
 
 	m->colours = new Colour[m->numVertices];
 	//Currently assigns each vertex to be Red, Green, and Blue respectively
@@ -99,9 +99,9 @@ Mesh* Mesh::GenerateAlphaTriangle(){
 
 	m->colours = new Colour[m->numVertices];
 	//Currently assigns each vertex to be Red, Green, and Blue respectively
-	m->colours[0] = Colour(255, 0, 0, 100);
-	m->colours[1] = Colour(0, 255, 0, 100);
-	m->colours[2] = Colour(0, 0, 255, 100);
+	m->colours[0] = Colour(127, 0, 0, 150);
+	m->colours[1] = Colour(0, 127, 0, 150);
+	m->colours[2] = Colour(0, 0, 127, 150);
 
 	m->textureCoords = new Vector2[m->numVertices];
 	m->textureCoords[0] = Vector2(0.0f, 0.0f);
