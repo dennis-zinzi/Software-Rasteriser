@@ -10,9 +10,11 @@ Texture::Texture(void)	{
 Texture::~Texture(void)	{
 	delete[] texels;
 
-	//Delete contents of mipLevels vector
-	for(Colour *c : mipLevels){
-		delete[] c;
+	if(mipLevels.size() != 0){
+		//Delete contents of mipLevels vector
+		for(Colour *c : mipLevels){
+			delete[] c;
+		}
 	}
 }
 

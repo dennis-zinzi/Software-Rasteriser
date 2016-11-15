@@ -29,8 +29,8 @@ Mesh* Mesh::GeneratePoint(const Vector3 &pos){
 	m->vertices[0] = Vector4(pos.x, pos.y, pos.z, 1.0f);
 
 	m->colours = new Colour[m->numVertices];
-	//m->colours[0] = Colour(((unsigned char)(rand() / 255) + 1), ((unsigned char)(rand() / 255) + 1), ((unsigned char)(rand() / 255) + 1), 255);
-	m->colours[0] = Colour(0, 0, 255, 255);
+	m->colours[0] = Colour(((unsigned char)(rand() / 255) + 1), ((unsigned char)(rand() / 255) + 1), ((unsigned char)(rand() / 255) + 1), 255);
+	//m->colours[0] = Colour(0, 0, 255, 255);
 
 	m->type = PRIMITIVE_POINTS;
 
@@ -48,8 +48,8 @@ Mesh* Mesh::GenerateLine(const Vector3 &from, const Vector3 &to){
 
 	//Add color to interpolate lines
 	m->colours = new Colour[m->numVertices];
-	//Default first vertex to be red
-	m->colours[0] = Colour(255, 0, 0, 0);
+	//Default first vertex to be green
+	m->colours[0] = Colour(0, 255, 0, 0);
 	//Default second vertex to be blue
 	m->colours[1] = Colour(0, 0, 255, 0);
 
@@ -69,7 +69,7 @@ Mesh* Mesh::GenerateTriangle(){
 	m->vertices = new Vector4[m->numVertices];
 	//Currently uses default sizes for Triangles, might change later to accept params insted
 	m->vertices[0] = Vector4(0.5f, -0.5f, 0.0f, 1.0f);
-	m->vertices[1] = Vector4(0.0f, 0.5f, 0.0f, 1.0f);
+	m->vertices[1] = Vector4(0.0f, 0.5f, 0.5f, 1.0f);
 	m->vertices[2] = Vector4(-0.5f, -0.5f, 0.0f, 1.0f);
 
 	m->colours = new Colour[m->numVertices];

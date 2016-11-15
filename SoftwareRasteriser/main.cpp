@@ -135,26 +135,101 @@ int main() {
 
 	
 	/* Scene objects */
+	Mesh *generalTriMesh = Mesh::GenerateTriangle();
+	
+	//Space star-field using points
 	RenderObject **points = new RenderObject*[100];
 	for(int x = 0; x < 100; x++){
 		points[x] = new RenderObject[100];
 		for(int y = 0; y < 100; y++){
-			points[x][y].mesh = Mesh::GeneratePoint(Vector3(x + 0.01f, y + 0.01f, -10.0f));
+			points[x][y].mesh = Mesh::GeneratePoint(Vector3(x + 0.01f, y + 0.01f, -(float)((rand() / 99) + 1)));
 
 			points[x][y].modelMatrix = Matrix4::Translation(Vector3(-50.0f + (x*0.01f), -50.0f + (y*0.01f), 0.0f));
 		}
 	}
 
-	RenderObject *ast1 = new RenderObject;
-	RenderObject *ast2 = new RenderObject;
-	RenderObject *ast3 = new RenderObject;
-	RenderObject *ast4 = new RenderObject;
+	//Asteroid object using lines
+	const int ASTEROID_LINES = 9;
+	RenderObject **asteroid1 = new RenderObject*[ASTEROID_LINES];
+	RenderObject **asteroid2 = new RenderObject*[ASTEROID_LINES];
+	RenderObject **asteroid3 = new RenderObject*[ASTEROID_LINES];
 
-	ast1->mesh = Mesh::GenerateLine(Vector3(-0.3f, -0.6f, -2.0f), Vector3(0.1f, 0.2f, -2.0f));
-	ast2->mesh = Mesh::GenerateLine(Vector3(0.1f, 0.2f, -2.0f), Vector3(0.9f, 0.5f, -2.0f));
-	ast3->mesh = Mesh::GenerateLine(Vector3(0.9f, 0.5f, -2.0f), Vector3(0.4f, 0.2f, -2.0f));
-	ast4->mesh = Mesh::GenerateLine(Vector3(0.4f, 0.2f, -2.0f), Vector3(-0.3f, -0.6f, -2.0f));
+	for(int i = 0; i < ASTEROID_LINES; i++){
+		asteroid1[i] = new RenderObject;
+		asteroid1[i]->modelMatrix = Matrix4::Translation(Vector3(-0.5f, 2.2f, 0.0f));
+
+		asteroid2[i] = new RenderObject;
+		asteroid2[i]->modelMatrix = Matrix4::Translation(Vector3(3.7f, -1.3f, 0.0f));
+
+		asteroid3[i] = new RenderObject;
+		asteroid3[i]->modelMatrix = Matrix4::Translation(Vector3(-1.1f, 0.8f, 0.0f)) * 
+			Matrix4::RotateZ(33.5f) * Matrix4::Scale(Vector3(3.0f, 2.5f, 1.0f));
+	}
+
+	float asteroid1Z = -20.0f;
+
+	asteroid1[0]->mesh = Mesh::GenerateLine(Vector3(-0.3f, -0.6f, asteroid1Z), Vector3(-0.55f, -0.45f, asteroid1Z));
+	asteroid1[1]->mesh = Mesh::GenerateLine(Vector3(-0.55f, -0.45f, asteroid1Z), Vector3(-0.5f, -0.2f, asteroid1Z));
+	asteroid1[2]->mesh = Mesh::GenerateLine(Vector3(-0.5f, -0.2f, asteroid1Z), Vector3(-0.25f, 0.0f, asteroid1Z));
+	asteroid1[3]->mesh = Mesh::GenerateLine(Vector3(-0.25f, 0.0f, asteroid1Z), Vector3(0.0f, 0.0f, asteroid1Z));
+	asteroid1[4]->mesh = Mesh::GenerateLine(Vector3(0.0f, 0.0f, asteroid1Z), Vector3(0.2f, 0.2f, asteroid1Z));
+	asteroid1[5]->mesh = Mesh::GenerateLine(Vector3(0.2f, 0.2f, asteroid1Z), Vector3(0.5f, -0.1f, asteroid1Z));
+	asteroid1[6]->mesh = Mesh::GenerateLine(Vector3(0.5f, -0.1f, asteroid1Z), Vector3(0.35f, -0.4f, asteroid1Z));
+	asteroid1[7]->mesh = Mesh::GenerateLine(Vector3(0.35f, -0.4f, asteroid1Z), Vector3(0.1f, -0.55f, asteroid1Z));
+	asteroid1[8]->mesh = Mesh::GenerateLine(Vector3(0.1f, -0.55f, asteroid1Z), Vector3(-0.3f, -0.6f, asteroid1Z));
+
+	float asteroid2Z = -55.0f;
+
+	asteroid2[0]->mesh = Mesh::GenerateLine(Vector3(0.3f, 0.6f, asteroid2Z), Vector3(0.55f, 0.45f, asteroid2Z));
+	asteroid2[1]->mesh = Mesh::GenerateLine(Vector3(0.55f, 0.45f, asteroid2Z), Vector3(0.5f, 0.2f, asteroid2Z));
+	asteroid2[2]->mesh = Mesh::GenerateLine(Vector3(0.5f, 0.2f, asteroid2Z), Vector3(0.25f, 0.0f, asteroid2Z));
+	asteroid2[3]->mesh = Mesh::GenerateLine(Vector3(0.25f, 0.0f, asteroid2Z), Vector3(0.0f, 0.0f, asteroid2Z));
+	asteroid2[4]->mesh = Mesh::GenerateLine(Vector3(0.0f, 0.0f, asteroid2Z), Vector3(-0.2f, -0.2f, asteroid2Z));
+	asteroid2[5]->mesh = Mesh::GenerateLine(Vector3(-0.2f, -0.2f, asteroid2Z), Vector3(-0.5f, 0.1f, asteroid2Z));
+	asteroid2[6]->mesh = Mesh::GenerateLine(Vector3(-0.5f, 0.1f, asteroid2Z), Vector3(-0.35f, 0.4f, asteroid2Z));
+	asteroid2[7]->mesh = Mesh::GenerateLine(Vector3(-0.35f, 0.4f, asteroid2Z), Vector3(-0.1f, 0.55f, asteroid2Z));
+	asteroid2[8]->mesh = Mesh::GenerateLine(Vector3(-0.1f, 0.55f, asteroid2Z), Vector3(0.3f, 0.6f, asteroid2Z));
+
+	float asteroid3Z = -63.5f;
+
+	asteroid3[0]->mesh = Mesh::GenerateLine(Vector3(-0.3f, -0.6f, asteroid3Z), Vector3(-0.55f, -0.45f, asteroid3Z));
+	asteroid3[1]->mesh = Mesh::GenerateLine(Vector3(-0.55f, -0.45f, asteroid3Z), Vector3(-0.5f, -0.2f, asteroid3Z));
+	asteroid3[2]->mesh = Mesh::GenerateLine(Vector3(-0.5f, -0.2f, asteroid3Z), Vector3(-0.25f, 0.0f, asteroid3Z));
+	asteroid3[3]->mesh = Mesh::GenerateLine(Vector3(-0.25f, 0.0f, asteroid3Z), Vector3(0.0f, 0.0f, asteroid3Z));
+	asteroid3[4]->mesh = Mesh::GenerateLine(Vector3(0.0f, 0.0f, asteroid3Z), Vector3(0.2f, 0.2f, asteroid3Z));
+	asteroid3[5]->mesh = Mesh::GenerateLine(Vector3(0.2f, 0.2f, asteroid3Z), Vector3(0.5f, -0.1f, asteroid3Z));
+	asteroid3[6]->mesh = Mesh::GenerateLine(Vector3(0.5f, -0.1f, asteroid3Z), Vector3(0.35f, -0.4f, asteroid3Z));
+	asteroid3[7]->mesh = Mesh::GenerateLine(Vector3(0.35f, -0.4f, asteroid3Z), Vector3(0.1f, -0.55f, asteroid3Z));
+	asteroid3[8]->mesh = Mesh::GenerateLine(Vector3(0.1f, -0.55f, asteroid3Z), Vector3(-0.3f, -0.6f, asteroid3Z));
+
+
+	//Spaceship made of triangles
+	const int SHIP_TRIS = 1;
+	RenderObject **spaceShip = new RenderObject*[SHIP_TRIS];
+	Texture *shipTex = Texture::TextureFromTGA("../brick.tga");/*("../shipTex1.tga");*/
+
+	for(int i = 0; i < SHIP_TRIS; i++){
+		spaceShip[i] = new RenderObject;
+		spaceShip[i]->mesh = generalTriMesh;
+		spaceShip[i]->texture = shipTex;
+		spaceShip[i]->modelMatrix = Matrix4::Translation(Vector3(0.0f, -2.5f, -6.0f)) * 
+			//Matrix4::RotateY(i % 2 == 1 ? 25.0f : -25.0f) *
+			Matrix4::Scale(Vector3(1.5f, 1.5f, 1.0f));
+	}
+
+	//Triangle star at center of screen
+	RenderObject **star = new RenderObject*[2];
+	star[0] = new RenderObject;
+	star[1] = new RenderObject;
 	
+	star[0]->mesh = generalTriMesh;
+	star[1]->mesh = generalTriMesh;
+
+	star[0]->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f, -99.0f)) * 
+		Matrix4::Scale(Vector3(3.5f, 3.5f, 1.0f));
+	star[1]->modelMatrix = Matrix4::Translation(Vector3(0.0f, 0.0f/*-2.0f*/, -99.0f)) *
+		Matrix4::Scale(Vector3(3.5f, 3.5f, 1.0f));
+
 
 
 
@@ -173,22 +248,40 @@ int main() {
 
 		//Testing of viewMatrix updating rendered object (Added in Tutorial 6)
 		if(Keyboard::KeyDown(KEY_A)){
-			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(-0.01f, 0.0f, 0.0f));
+			/*viewMatrix = viewMatrix * Matrix4::Translation(Vector3(-0.01f, 0.0f, 0.0f));*/
+			for(int i = 0; i < SHIP_TRIS; i++){
+				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(-0.01f, 0.0f, 0.0f));
+			}
 		}
 		if(Keyboard::KeyDown(KEY_D)){
-			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.01f, 0.0f, 0.0f));
+			//viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.01f, 0.0f, 0.0f));
+			for(int i = 0; i < SHIP_TRIS; i++){
+				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(0.01f, 0.0f, 0.0f));
+			}
 		}
 		if(Keyboard::KeyDown(KEY_W)){
-			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.01f, 0.0f));
+			//viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.01f, 0.0f));
+			for(int i = 0; i < SHIP_TRIS; i++){
+				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(0.0f, 0.01f, 0.0f));
+			}
 		}
 		if(Keyboard::KeyDown(KEY_S)){
-			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, -0.01f, 0.0f));
+			//viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, -0.01f, 0.0f));
+			for(int i = 0; i < SHIP_TRIS; i++){
+				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(0.0f, -0.01f, 0.0f));
+			}
 		}
 		if(Keyboard::KeyDown(KEY_E)){
-			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, 0.01f));
+			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, 0.1f));
+			for(int i = 0; i < SHIP_TRIS; i++){
+				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(0.0f, 0.0f, -0.1f));
+			}
 		}
 		if(Keyboard::KeyDown(KEY_Q)){
-			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, -0.01f));
+			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, -0.1f));
+			for(int i = 0; i < SHIP_TRIS; i++){
+				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(0.0f, 0.0f, 0.1f));
+			}
 		}
 		if(Keyboard::KeyDown(KEY_RIGHT)){
 			viewMatrix = viewMatrix * Matrix4::RotateZ(1.0f);
@@ -268,21 +361,34 @@ int main() {
 		//r.DrawObject(o6);
 
 		/* Tutorial 12 objects */
-		//r.DrawObject(o2); 
-		//r.DrawObject(o1);
+		//r.DrawObject(o1); 
+		//r.DrawObject(o2);
 
 
 
 		/* Coursework objects */
+		//Make star objects rotate each frame
+		star[0]->modelMatrix = star[0]->GetModelMatrix() * Matrix4::Rotation(17.0f, Vector3(0.0f, 0.0f, 1.0f));
+		star[1]->modelMatrix = star[1]->GetModelMatrix() * Matrix4::Rotation(-17.0f, Vector3(0.0f, 0.0f, 1.0f));
+
+		r.DrawObject(star[0]);
+		r.DrawObject(star[1]);
+		
+		for(int i = 0; i < ASTEROID_LINES; i++){
+			r.DrawObject(asteroid1[i]);
+			r.DrawObject(asteroid2[i]);
+			r.DrawObject(asteroid3[i]);
+		}
+
+		for(int i = 0; i < SHIP_TRIS; i++){
+			r.DrawObject(spaceShip[i]);
+		}
+
 		for(int x = 0; x < 100; x++){
 			for(int y = 0; y < 100; y++){
 				r.DrawObject(&points[x][y]);
 			}
 		}
-		r.DrawObject(ast1);
-		r.DrawObject(ast2);
-		r.DrawObject(ast3);
-		r.DrawObject(ast4);
 		
 
 		//NEVER ACTUALLY USED
@@ -341,10 +447,24 @@ int main() {
 	}
 	delete[] points;
 
-	delete ast1;
-	delete ast2;
-	delete ast3;
-	delete ast4;
+	for(int i = 0; i < ASTEROID_LINES; i++){
+		delete asteroid1[i];
+		delete asteroid2[i];
+		delete asteroid3[i];
+	}
+	delete[] asteroid1;
+	delete[] asteroid2;
+	delete[] asteroid3;
+
+	/*for(int i = 0; i < 4; i++){
+		delete spaceShip[i];
+	}*/
+	//delete shipTris;
+	//delete shipTex;
+
+	delete[] spaceShip;
+
+	delete generalTriMesh;
 
 
 	return 0;

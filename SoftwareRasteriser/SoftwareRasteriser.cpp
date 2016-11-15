@@ -399,13 +399,16 @@ void SoftwareRasteriser::SutherlandHodgmanTri(Vector4 &v0, Vector4 &v1, Vector4 
 -------------------------------------------------- */
 void SoftwareRasteriser::RasterisePointsMesh(RenderObject *o) {
 	Matrix4 mvp = viewProjMatrix * o->GetModelMatrix();
+	Mesh *m = o->GetMesh();
 
-	for(uint i = 0; i < o->GetMesh()->numVertices; ++i){
-		Vector4 vertexPos = mvp * o->GetMesh()->vertices[i];
+	for(uint i = 0; i < m->numVertices; ++i){
+		Vector4 vertexPos = mvp * m->vertices[i];
+		Colour c0 = m->colours[i];
+
 		vertexPos.SelfDivisionByW();
 
 		Vector4 screenPos = portMatrix * vertexPos;
-		ShadePixel((uint)screenPos.x, (uint)screenPos.y, Colour::White);
+		ShadePixel((uint)screenPos.x, (uint)screenPos.y, c0);
 	}
 }
 
