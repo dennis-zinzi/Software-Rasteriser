@@ -136,11 +136,24 @@ int main() {
 	
 	/* Scene objects */
 	RenderObject **points = new RenderObject*[100];
-	for(int i = 0; i < 100; i++){
-		points[i] = new RenderObject;
-		points[i]->mesh = Mesh::GeneratePoint(Vector3(i + 0.01f, 0.0f, -6.0f));
-		points[i]->modelMatrix = Matrix4::Translation(Vector3(i+0.01f, 0.0f, -6.0f));
+	for(int x = 0; x < 100; x++){
+		points[x] = new RenderObject[100];
+		for(int y = 0; y < 100; y++){
+			points[x][y].mesh = Mesh::GeneratePoint(Vector3(x + 0.01f, y + 0.01f, -10.0f));
+
+			points[x][y].modelMatrix = Matrix4::Translation(Vector3(-50.0f + (x*0.01f), -50.0f + (y*0.01f), 0.0f));
+		}
 	}
+
+	RenderObject *ast1 = new RenderObject;
+	RenderObject *ast2 = new RenderObject;
+	RenderObject *ast3 = new RenderObject;
+	RenderObject *ast4 = new RenderObject;
+
+	ast1->mesh = Mesh::GenerateLine(Vector3(-0.3f, -0.6f, -2.0f), Vector3(0.1f, 0.2f, -2.0f));
+	ast2->mesh = Mesh::GenerateLine(Vector3(0.1f, 0.2f, -2.0f), Vector3(0.9f, 0.5f, -2.0f));
+	ast3->mesh = Mesh::GenerateLine(Vector3(0.9f, 0.5f, -2.0f), Vector3(0.4f, 0.2f, -2.0f));
+	ast4->mesh = Mesh::GenerateLine(Vector3(0.4f, 0.2f, -2.0f), Vector3(-0.3f, -0.6f, -2.0f));
 	
 
 
@@ -261,9 +274,15 @@ int main() {
 
 
 		/* Coursework objects */
-		for(int i = 0; i < 100; i++){
-			r.DrawObject(points[i]);
+		for(int x = 0; x < 100; x++){
+			for(int y = 0; y < 100; y++){
+				r.DrawObject(&points[x][y]);
+			}
 		}
+		r.DrawObject(ast1);
+		r.DrawObject(ast2);
+		r.DrawObject(ast3);
+		r.DrawObject(ast4);
 		
 
 		//NEVER ACTUALLY USED
@@ -314,6 +333,19 @@ int main() {
 	//As o1 and o2use same mesh, only need to delete it once 
 	//delete o1;
 	//delete o2;
+
+
+	/* Coursework objects */
+	for(int x = 0; x < 100; x++){
+		delete[] points[x];
+	}
+	delete[] points;
+
+	delete ast1;
+	delete ast2;
+	delete ast3;
+	delete ast4;
+
 
 	return 0;
 }
