@@ -462,11 +462,11 @@ void SoftwareRasteriser::RasteriseTriMesh(RenderObject *o) {
 		v1.SelfDivisionByW();
 		v2.SelfDivisionByW();*/
 
-		/*float triArea = ScreenAreaOfTri(v0, v1, v2);
+		float triArea = ScreenAreaOfTri(v0, v1, v2);
 
 		if(triArea < 0.0f){
 			continue;
-		}*/
+		}
 
 		SutherlandHodgmanTri(v0, v1, v2,
 			m->colours[i], m->colours[i + 1], m->colours[i + 2],
@@ -610,6 +610,7 @@ void SoftwareRasteriser::RasteriseTri(const Vector4 &v0, const Vector4 &v1, cons
 				continue;
 			}
 			if(triSum < 1.0f){
+				std::cout << "STOP dinky tri" << std::endl;
 				//Tiny triangle, ignore it
 				continue;
 			}

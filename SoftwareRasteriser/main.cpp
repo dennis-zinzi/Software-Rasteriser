@@ -153,11 +153,12 @@ int main() {
 		}
 	}
 
-	//Asteroid object using lines
+	//Asteroid objects using lines
 	const int ASTEROID_LINES = 9;
 	RenderObject **asteroid1 = new RenderObject*[ASTEROID_LINES];
 	RenderObject **asteroid2 = new RenderObject*[ASTEROID_LINES];
 	RenderObject **asteroid3 = new RenderObject*[ASTEROID_LINES];
+	RenderObject **asteroid4 = new RenderObject*[ASTEROID_LINES];
 
 	for(int i = 0; i < ASTEROID_LINES; i++){
 		asteroid1[i] = new RenderObject;
@@ -169,6 +170,10 @@ int main() {
 		asteroid3[i] = new RenderObject;
 		asteroid3[i]->modelMatrix = Matrix4::Translation(Vector3(-1.1f, 0.8f, 0.0f)) * 
 			Matrix4::RotateZ(33.5f) * Matrix4::Scale(Vector3(3.0f, 2.5f, 1.0f));
+
+		asteroid4[i] = new RenderObject;
+		asteroid4[i]->modelMatrix = Matrix4::Translation(Vector3(-2.7f, -3.9f, 0.0f)) *
+			Matrix4::RotateZ(-53.5f) * Matrix4::Scale(Vector3(4.0f, 1.5f, 1.0f));
 	}
 
 	float asteroid1Z = -20.0f;
@@ -207,9 +212,21 @@ int main() {
 	asteroid3[7]->mesh = Mesh::GenerateLine(Vector3(0.35f, -0.4f, asteroid3Z), Vector3(0.1f, -0.55f, asteroid3Z));
 	asteroid3[8]->mesh = Mesh::GenerateLine(Vector3(0.1f, -0.55f, asteroid3Z), Vector3(-0.3f, -0.6f, asteroid3Z));
 
+	float asteroid4Z = -41.0f;
 
-	//Spaceship made of triangles
-	const int SHIP_TRIS = 3;
+	asteroid4[0]->mesh = Mesh::GenerateLine(Vector3(-0.3f, -0.6f, asteroid4Z), Vector3(-0.55f, -0.45f, asteroid4Z));
+	asteroid4[1]->mesh = Mesh::GenerateLine(Vector3(-0.55f, -0.45f, asteroid4Z), Vector3(-0.5f, -0.2f, asteroid4Z));
+	asteroid4[2]->mesh = Mesh::GenerateLine(Vector3(-0.5f, -0.2f, asteroid4Z), Vector3(-0.25f, 0.0f, asteroid4Z));
+	asteroid4[3]->mesh = Mesh::GenerateLine(Vector3(-0.25f, 0.0f, asteroid4Z), Vector3(0.0f, 0.0f, asteroid4Z));
+	asteroid4[4]->mesh = Mesh::GenerateLine(Vector3(0.0f, 0.0f, asteroid4Z), Vector3(0.2f, 0.2f, asteroid4Z));
+	asteroid4[5]->mesh = Mesh::GenerateLine(Vector3(0.2f, 0.2f, asteroid4Z), Vector3(0.5f, -0.1f, asteroid4Z));
+	asteroid4[6]->mesh = Mesh::GenerateLine(Vector3(0.5f, -0.1f, asteroid4Z), Vector3(0.35f, -0.4f, asteroid4Z));
+	asteroid4[7]->mesh = Mesh::GenerateLine(Vector3(0.35f, -0.4f, asteroid4Z), Vector3(0.1f, -0.55f, asteroid4Z));
+	asteroid4[8]->mesh = Mesh::GenerateLine(Vector3(0.1f, -0.55f, asteroid4Z), Vector3(-0.3f, -0.6f, asteroid4Z));
+
+
+	//Spaceship made of triangle primitives
+	const int SHIP_TRIS = 4;
 	RenderObject **spaceShip = new RenderObject*[SHIP_TRIS];
 	Texture *shipTex = Texture::TextureFromTGA("../brick.tga");/*("../shipTex1.tga");*/
 
@@ -217,14 +234,22 @@ int main() {
 		spaceShip[i] = new RenderObject;
 		//spaceShip[i]->mesh = generalTriMesh;
 		spaceShip[i]->texture = shipTex;
-		spaceShip[i]->modelMatrix = Matrix4::Translation(Vector3(0.0f, /*-2.5f*/0.0f, -6.0f));/*
-			//Matrix4::RotateY(i % 2 == 1 ? 25.0f : -25.0f) *
-			Matrix4::Scale(Vector3(1.5f, 1.5f, 1.0f));*/
+		spaceShip[i]->modelMatrix = Matrix4::Translation(Vector3(0.0f, -2.5f, -6.0f)) *
+			Matrix4::Scale(Vector3(1.25f, 1.25f, 1.0f));
 	}
 
 	spaceShip[0]->mesh = Mesh::GenerateTriangle(Vector3(0.5f, -0.5f, 0.0f), Vector3(0.0f, 0.5f, 0.5f), Vector3(-0.5f, -0.5f, 0.0f));
 	spaceShip[1]->mesh = Mesh::GenerateTriangle(Vector3(0.0f, 0.5f, 1.0f), Vector3(0.0f, 0.5f, 0.5f), Vector3(0.5f, -0.5f, 0.0f));
 	spaceShip[2]->mesh = Mesh::GenerateTriangle(Vector3(-0.5f, -0.5f, 0.0f), Vector3(0.0f, 0.5f, 0.5f), Vector3(0.0f, 0.5f, 1.0f));
+	spaceShip[3]->mesh = Mesh::GenerateTriangle(Vector3(0.5f, -0.5f, 0.0f), Vector3(0.0f, 0.5f, 1.0f), Vector3(-0.5f, -0.5f, 0.0f));
+
+
+	//Rotating object
+	RenderObject *rotTri = new RenderObject;
+	rotTri->texture = Texture::TextureFromTGA("../shipTex1.tga");
+	rotTri->mesh = generalTriMesh;
+	rotTri->modelMatrix = Matrix4::Translation(Vector3(10.0f, 10.5f, -80.0f)) *
+		Matrix4::Scale(Vector3(2.0f, 2.0f, 1.0f));
 
 
 	//Triangle star at center of screen
@@ -244,25 +269,8 @@ int main() {
 	//semi-Transparent triangle
 	RenderObject *transparentTri = new RenderObject;
 	transparentTri->mesh = Mesh::GenerateAlphaTriangle();
-	transparentTri->modelMatrix = Matrix4::Translation(Vector3(1.4f, -1.44f, -76.0f));
-
-
-	//Triangle wheel
-	const int WHEEL_TRIANGLES = 2;
-	RenderObject **triWheel = new RenderObject*[WHEEL_TRIANGLES];
-
-	for(int i = 0; i < WHEEL_TRIANGLES; i++){
-		triWheel[i] = new RenderObject;
-		//triWheel[i]->modelMatrix = Matrix4::Translation(Vector3(-0.75f, 1.0f, -6.0f));
-		triWheel[i]->modelMatrix = Matrix4::Translation(Vector3(0.0f, /*-2.5f*/0.0f, -32.0f));
-	}
-
-	float wheelZ = -32.0f;
-
-	triWheel[0]->mesh = Mesh::GenerateTriangle(Vector3(0.75f, 0.25f, -1.0f), Vector3(0.5f, 0.75f, -1.0f), Vector3(1.0f, 0.25f, -1.0f));/*Mesh::GenerateTriangle(Vector3(2.5f, 1.5f, wheelZ), Vector3(1.75f, 2.5f, wheelZ), Vector3(3.0f, 1.5f, wheelZ))*/;
-	triWheel[1]->mesh = Mesh::GenerateTriangle(Vector3(1.75f, 1.75f, wheelZ), Vector3(1.75f, 2.5f, wheelZ), Vector3(2.5f, 1.5f, wheelZ));
-
-
+	transparentTri->modelMatrix = Matrix4::Translation(Vector3(0.4f, -1.44f, -76.0f)) *
+		Matrix4::Scale(Vector3(2.0f, 2.0f, 1.0f));
 
 
 
@@ -304,15 +312,15 @@ int main() {
 			}
 		}
 		if(Keyboard::KeyDown(KEY_E)){
-			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, 0.1f));
+			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, 0.25f));
 			for(int i = 0; i < SHIP_TRIS; i++){
-				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(0.0f, 0.0f, -0.1f));
+				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(0.0f, 0.0f, -0.25f));
 			}
 		}
 		if(Keyboard::KeyDown(KEY_Q)){
-			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, -0.1f));
+			viewMatrix = viewMatrix * Matrix4::Translation(Vector3(0.0f, 0.0f, -0.25f));
 			for(int i = 0; i < SHIP_TRIS; i++){
-				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(0.0f, 0.0f, 0.1f));
+				spaceShip[i]->modelMatrix = spaceShip[i]->GetModelMatrix() * Matrix4::Translation(Vector3(0.0f, 0.0f, 0.25f));
 			}
 		}
 		if(Keyboard::KeyDown(KEY_RIGHT)){
@@ -400,21 +408,22 @@ int main() {
 
 		/* Coursework objects */
 		//Make star objects rotate each frame
-		star[0]->modelMatrix = star[0]->GetModelMatrix() * Matrix4::Rotation(17.0f, Vector3(0.0f, 0.0f, 1.0f));
-		star[1]->modelMatrix = star[1]->GetModelMatrix() * Matrix4::Rotation(-17.0f, Vector3(0.0f, 0.0f, 1.0f));
+		star[0]->modelMatrix = star[0]->GetModelMatrix() * Matrix4::RotateZ(17.0f);
+		star[1]->modelMatrix = star[1]->GetModelMatrix() * Matrix4::RotateZ(-17.0f);
 
 		r.DrawObject(star[0]);
 		r.DrawObject(star[1]);
+
+		rotTri->modelMatrix = rotTri->GetModelMatrix() * Matrix4::Translation(Vector3(-0.01f, -0.01f, 0.1f)) * Matrix4::Rotation(10.0f, Vector3(1.0f, 1.0f, 0.0f));
+
 		
 		for(int i = 0; i < ASTEROID_LINES; i++){
 			r.DrawObject(asteroid1[i]);
 			r.DrawObject(asteroid2[i]);
 			r.DrawObject(asteroid3[i]);
+			r.DrawObject(asteroid4[i]);
 		}
 
-		for(int i = 0; i < WHEEL_TRIANGLES; i++){
-			r.DrawObject(triWheel[i]);
-		}
 
 		for(int i = 0; i < SHIP_TRIS; i++){
 			r.DrawObject(spaceShip[i]);
@@ -425,7 +434,8 @@ int main() {
 				r.DrawObject(&points[x][y]);
 			}
 		}
-		
+
+		r.DrawObject(rotTri);
 		r.DrawObject(transparentTri);
 
 		//NEVER ACTUALLY USED
@@ -492,6 +502,7 @@ int main() {
 	delete[] asteroid1;
 	delete[] asteroid2;
 	delete[] asteroid3;
+	delete[] asteroid4;
 
 	/*for(int i = 0; i < 4; i++){
 		delete spaceShip[i];
@@ -501,10 +512,6 @@ int main() {
 
 	delete[] spaceShip;
 
-	for(int i = 0; i < WHEEL_TRIANGLES; i++){
-		delete triWheel[i];
-	}
-	delete[] triWheel;
 
 	delete generalTriMesh;
 	delete transparentTri;
